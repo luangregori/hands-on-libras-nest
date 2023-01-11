@@ -28,11 +28,12 @@ export class LessonController {
     return res.status(HttpStatus.OK).json(lessons);
   }
 
-  // @Post('/start')
-  // public async login(
-  //   @Res() res,
-  //   @Body() startLessonDto: StartLessonDto,
-  // ) {
-  //   return res.status(HttpStatus.OK).json();
-  // }
+  @Post('/start')
+  public async login(
+    @Res() res,
+    @Body() startLessonDto: StartLessonDto,
+  ) {
+    const infos = await this.lessonService.start(startLessonDto.lessonId, startLessonDto.accountId)
+    return res.status(HttpStatus.OK).json(infos);
+  }
 }

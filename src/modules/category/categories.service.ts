@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { Category } from './schemas/category.schema';
+import { MongoHelper } from 'src/common/db';
 
 @Injectable()
 export class CategoryService {
@@ -10,6 +11,7 @@ export class CategoryService {
   ) { }
 
   public async findAll(): Promise<Category[]> {
-    return this.categoryModel.find().exec();
+    const result = await this.categoryModel.find().exec();
+    return result.map(el => MongoHelper.map(el.toObject()));
   }
 }

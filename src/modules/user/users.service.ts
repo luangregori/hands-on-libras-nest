@@ -35,9 +35,9 @@ export class UserService {
       if (isValid) {
         const expiresIn = this.configService.get('JWT_VERIFICATION_TOKEN_EXPIRATION_TIME')
         const accessToken = jwt.sign(
-          { email: user.email },
+          { email: user.email, id: user.id },
           this.configService.get('JWT_VERIFICATION_TOKEN_SECRET'),
-          { expiresIn }
+          { expiresIn: `${expiresIn}s` }
         )
         return {
           accessToken,
