@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common';
 import { LessonService } from './lessons.service';
 import { ApiTags } from '@nestjs/swagger';
-import { LoadLessonsDto, StartLessonDto } from './dto';
+import { LearnLessonDto, LoadLessonsDto, StartLessonDto } from './dto';
 
 @ApiTags('lesson')
 @Controller('lessons')
@@ -29,11 +29,20 @@ export class LessonController {
   }
 
   @Post('/start')
-  public async login(
+  public async start(
     @Res() res,
     @Body() startLessonDto: StartLessonDto,
   ) {
-    const infos = await this.lessonService.start(startLessonDto.lessonId, startLessonDto.accountId)
+    const infos = await this.lessonService.start(startLessonDto.lessonId, startLessonDto.accountId);
+    return res.status(HttpStatus.OK).json(infos);
+  }
+
+  @Post('/learn')
+  public async learn(
+    @Res() res,
+    @Body() learnLessonDto: LearnLessonDto,
+  ) {
+    const infos = await this.lessonService.learn(learnLessonDto.lessonId);
     return res.status(HttpStatus.OK).json(infos);
   }
 }

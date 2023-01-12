@@ -3,12 +3,14 @@ import { LessonService } from './lessons.service';
 import { LessonController } from './lessons.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { LessonSchema, Lesson } from './schemas/lesson.schema';
-import { ChallengeResultsModule } from 'src/modules/challenge-result/challenge-results.module';
 import { AuthMiddleware } from 'src/common/middlewares';
+import { ChallengeResultsModule } from 'src/modules/challenge-result/challenge-results.module';
+import { LearningInfosModule } from 'src/modules/learning-info/learning-infos.module';
 
 @Module({
   imports: [
     ChallengeResultsModule,
+    LearningInfosModule,
     MongooseModule.forFeature([
       { name: Lesson.name, schema: LessonSchema },
     ]),

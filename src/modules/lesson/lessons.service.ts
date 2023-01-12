@@ -1,16 +1,18 @@
-import { Injectable } from '@nestjs/common';
 import { Model } from 'mongoose';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import { MongoHelper } from 'src/common/db';
 import { Lesson } from './schemas/lesson.schema';
 import { StartLessonResult } from './interfaces/lesson.interface';
 import { ChallengeResult, StatusChallengeResult } from 'src/modules/challenge-result/schemas/challenge-result.schema';
-import { MongoHelper } from 'src/common/db';
+import { LearningInfo } from 'src/modules/learning-info/schemas/learning-info.schema';
 
 @Injectable()
 export class LessonService {
   constructor(
     @InjectModel(Lesson.name) private readonly lessonModel: Model<Lesson>,
-    @InjectModel(ChallengeResult.name) private readonly challengeResultModel: Model<ChallengeResult>
+    @InjectModel(ChallengeResult.name) private readonly challengeResultModel: Model<ChallengeResult>,
+    @InjectModel(LearningInfo.name) private readonly learningInfoModel: Model<LearningInfo>
   ) { }
 
   public async findAll(): Promise<Lesson[]> {
@@ -49,5 +51,10 @@ export class LessonService {
       lessonInfo,
       userInfo
     }
+  }
+
+  public async learn(lessonId: string): Promise<LearningInfo[]> {
+    const result = await this.learningInfoModel.find({ lessonId }).exec();
+    return result.map(el => MongoHelper.map(el.toObject()));
   }
 }
