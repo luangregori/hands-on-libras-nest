@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common';
 import { LessonService } from './lessons.service';
 import { ApiTags } from '@nestjs/swagger';
-import { ChallengeLessonDto, CompleteLearnDto, LearnLessonDto, LoadLessonsDto, StartLessonDto } from './dto';
+import { ChallengeLessonDto, CompleteChallengeDto, CompleteLearnDto, LearnLessonDto, LoadLessonsDto, StartLessonDto } from './dto';
 
 @ApiTags('lesson')
 @Controller('lessons')
@@ -67,5 +67,17 @@ export class LessonController {
     const infos = await this.lessonService.challengeLesson(challengeLessonDto.lessonId, challengeLessonDto.accountId);
 
     return res.status(HttpStatus.OK).json(infos);
+  }
+
+  @Post('/challenge/complete')
+  public async completeChallenge(
+    @Res() res,
+    @Body() completeChallengeDto: CompleteChallengeDto,
+  ) {
+
+    await this.lessonService.completeChallenge(completeChallengeDto.lessonId, completeChallengeDto.accountId, Number(completeChallengeDto.lives));
+    //TODO: check achievements
+
+    return res.status(HttpStatus.OK).json();
   }
 }

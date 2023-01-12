@@ -91,4 +91,26 @@ export class LessonService {
     const questions = await this.challengeQuestionModel.find({ lessonId }).exec();
     return questions.map(el => MongoHelper.map(el.toObject()));
   }
+
+  public async completeChallenge(lessonId: string, accountId: string, lives: number): Promise<void> {
+    const challengeResult = await this.challengeResultModel.findOne({ lessonId, accountId }).exec();
+
+    // Se ja completou o desafio, não dá mais pontos
+    if (challengeResult.status === StatusChallengeResult.COMPLETED) {
+      return
+    }
+
+    // Se acabou as vidas, reverte o status e não da pontos
+    if (challengeResult.status === StatusChallengeResult.TESTED && lives === 0) {
+      challengeResult.status = StatusChallengeResult.LEARNED
+      await this.challengeResultModel.findOneAndUpdate({ accountId, lessonId }, challengeResult, { returnOriginal: false })
+      return
+    }
+
+    // Da pontuação conforme a quantidade de vidas
+    challengeResult.status = lives === 3 ? StatusChallengeResult.COMPLETED : StatusChallengeResult.TESTED
+    challengeResult.score += lives === 3 ? 90 : lives * 30
+    await this.challengeResultModel.findOneAndUpdate({ accountId, lessonId }, challengeResult, { returnOriginal: false })
+    return
+  }
 }
