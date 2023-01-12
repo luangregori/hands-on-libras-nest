@@ -1,12 +1,12 @@
 import { Model } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { MongoHelper } from 'src/common/db';
+import { MongoHelper } from '../../common/db';
 import { Lesson } from './schemas/lesson.schema';
 import { StartLessonResult } from './interfaces/lesson.interface';
-import { ChallengeResult, StatusChallengeResult } from 'src/modules/challenge-result/schemas/challenge-result.schema';
-import { LearningInfo } from 'src/modules/learning-info/schemas/learning-info.schema';
-import { ChallengeQuestion } from 'src/modules/challenge-question/schemas/challenge-question.schema';
+import { ChallengeResult, StatusChallengeResult } from '../challenge-result/schemas/challenge-result.schema';
+import { LearningInfo } from '../learning-info/schemas/learning-info.schema';
+import { ChallengeQuestion } from '../challenge-question/schemas/challenge-question.schema';
 
 @Injectable()
 export class LessonService {

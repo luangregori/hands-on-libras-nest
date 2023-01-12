@@ -3,7 +3,7 @@ import { CategoryService } from './categories.service';
 import { CategoryController } from './categories.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { CategorySchema, Category } from './schemas/category.schema';
-import { AuthMiddleware } from 'src/common/middlewares';
+import { AuthMiddleware } from '../../common/middlewares';
 
 @Module({
   imports: [

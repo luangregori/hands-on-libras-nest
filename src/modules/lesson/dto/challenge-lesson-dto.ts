@@ -2,7 +2,7 @@ import {
   IsString,
   IsNotEmpty,
 } from 'class-validator';
-import { ProtectedRouteDto } from 'src/common/dto';
+import { ProtectedRouteDto } from '../../../common/dto';
 
 export class ChallengeLessonDto extends ProtectedRouteDto {
 
