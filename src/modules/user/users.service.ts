@@ -70,4 +70,33 @@ export class UserService {
 
     return Object.assign({}, userWithOutPass)
   }
+
+  public async updateInfosById(accountId: string, params: any): Promise<User> {
+    const account = await this.userModel.findById(accountId)
+    if (params.newPassword) {
+      const isValid = await bcrypt.compare(params.oldPassword, account.password)
+      if (!isValid) {
+        throw new UnauthorizedException('Invalid password')
+      }
+      const hashedPassword = await bcrypt.hash(params.newPassword, 12)
+      params = { ...params, password: hashedPassword } as any
+      delete params.oldPassword
+      delete params.newPassword
+    }
+
+    if (params.email && params.email !== account.email) {
+      params.email_verified = false
+    }
+
+    let updatedAccount = await this.userModel.findOneAndUpdate(
+      { accountId },
+      { $set: params },
+      { returnOriginal: false }
+    ).exec();
+
+    updatedAccount = MongoHelper.map(updatedAccount.toObject())
+
+    delete updatedAccount.password
+    return updatedAccount
+  }
 }

@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { UserService } from './users.service';
 import { ApiTags } from '@nestjs/swagger';
-import { LoginDto, RegisterDto, ScoreDto, UserInfoDto, } from './dto';
+import { LoginDto, RegisterDto, ScoreDto, UpdateUserInfoDto, UserInfoDto, } from './dto';
 import { RankingService } from '../ranking/ranking.service';
 
 @ApiTags('user')
@@ -74,5 +74,26 @@ export class UserController {
     const userRanking = await this.rankingService.load(7);
     const userPosition = userRanking.find(user => user.id.toString() === accountId)?.position;
     return res.status(HttpStatus.OK).json({ userInfo, userScore, userPosition });
+  }
+
+  @Post('/update')
+  public async updateInfos(
+    @Res() res,
+    @Body() updateUserInfoDto: UpdateUserInfoDto,
+  ) {
+    if (updateUserInfoDto.newPassword && !updateUserInfoDto.oldPassword) {
+      return new BadRequestException('Missing param: oldPassword')
+    }
+
+    const protectedFields = ['id', '_id', 'password']
+    for (const field of protectedFields) {
+      if (updateUserInfoDto[field]) {
+        delete updateUserInfoDto[field]
+      }
+    }
+
+    const { accountId, ...params } = updateUserInfoDto
+    const userInfo = await this.userService.updateInfosById(accountId, params)
+    return res.status(HttpStatus.OK).json(userInfo);
   }
 }
