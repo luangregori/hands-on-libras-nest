@@ -8,7 +8,6 @@ export class AuthMiddleware implements NestMiddleware {
     try {
       const accessToken = req.headers?.['x-access-token']
       if (accessToken) {
-        // TODO: pegar secret
         const token = jwt.verify(accessToken, process.env.JWT_VERIFICATION_TOKEN_SECRET)
         if (token) {
           req.body.accountId = token.id
