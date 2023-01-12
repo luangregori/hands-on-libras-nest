@@ -66,9 +66,9 @@ export class UserService {
 
     // TODO: check achievements
     // const achievements = await this.findAchievementsRepository.find(accountId)
-    // return Object.assign({}, userWithOutPass, { achievements })
+    const achievements = [{ icon: 'trophy', name: '' }]
 
-    return Object.assign({}, userWithOutPass)
+    return Object.assign({}, userWithOutPass, { achievements })
   }
 
   public async updateInfosById(accountId: string, params: any): Promise<User> {

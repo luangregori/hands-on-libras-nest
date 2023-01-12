@@ -12,5 +12,5 @@ export interface LoadUserInfo {
   name: string
   image_url?: string
   // TODO: add achievements
-  // achievements: AchievementModel[]
+  achievements: Array<any>
 }
