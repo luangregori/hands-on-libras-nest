@@ -1,11 +1,14 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
 import { UserService } from './users.service';
 import { UserController } from './users.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { UserSchema, User } from './schemas/user.schema';
+import { ChallengeResultsModule } from '../challenge-result/challenge-results.module';
+import { AuthMiddleware } from 'src/common/middlewares';
 
 @Module({
   imports: [
+    ChallengeResultsModule,
     MongooseModule.forFeature([
       { name: User.name, schema: UserSchema },
     ]),
@@ -18,4 +21,15 @@ import { UserSchema, User } from './schemas/user.schema';
     ]),
   ]
 })
-export class UsersModule { }
+export class UsersModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(AuthMiddleware)
+      .exclude(
+        { path: '/users/register', method: RequestMethod.POST },
+        { path: '/users/login', method: RequestMethod.POST },
+      )
+      .forRoutes('users');
+  }
+}
+

@@ -11,6 +11,7 @@ import { UserService } from './users.service';
 import { ApiTags } from '@nestjs/swagger';
 import { LoginDto } from './dto';
 import { RegisterDto } from './dto/register-dto';
+import { ScoreDto } from './dto/score-dto';
 
 @ApiTags('user')
 @Controller('users')
@@ -51,5 +52,14 @@ export class UserController {
     } catch (err) {
       return res.status(err.status).json(err.response);
     }
+  }
+
+  @Post('/score')
+  public async score(
+    @Res() res,
+    @Body() scoreDto: ScoreDto,
+  ) {
+    const score = await this.userService.loadScore(scoreDto.accountId)
+    return res.status(HttpStatus.OK).json(score);
   }
 }

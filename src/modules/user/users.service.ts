@@ -6,11 +6,14 @@ import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken'
 import { User } from './schemas/user.schema';
 import { Authentication } from './dto/auth-dto';
+import { ChallengeResult } from '../challenge-result/schemas/challenge-result.schema';
+import { MongoHelper } from 'src/common/db';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectModel(User.name) private readonly userModel: Model<User>,
+    @InjectModel(ChallengeResult.name) private readonly challengeResultModel: Model<ChallengeResult>,
     private readonly configService: ConfigService,
   ) { }
 
@@ -47,5 +50,11 @@ export class UserService {
       }
     }
     throw new UnauthorizedException()
+  }
+
+  public async loadScore(accountId: string): Promise<number> {
+    let results = await this.challengeResultModel.find({ accountId }).exec();
+    const sum = results.reduce((acc, result) => acc + result.score, 0)
+    return sum
   }
 }
