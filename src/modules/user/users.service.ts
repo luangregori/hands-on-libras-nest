@@ -5,9 +5,9 @@ import { InjectModel } from '@nestjs/mongoose';
 import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken'
 import { User } from './schemas/user.schema';
-import { Authentication } from './dto/auth-dto';
 import { ChallengeResult } from '../challenge-result/schemas/challenge-result.schema';
 import { MongoHelper } from 'src/common/db';
+import { AuthResult } from './interfaces/auth.interface';
 
 @Injectable()
 export class UserService {
@@ -31,7 +31,7 @@ export class UserService {
     return user
   }
 
-  public async auth(email: string, password: string): Promise<Authentication.Result> {
+  public async auth(email: string, password: string): Promise<AuthResult> {
     const user = await this.userModel.findOne({ email })
     if (user) {
       const isValid = await bcrypt.compare(password, user.password)
