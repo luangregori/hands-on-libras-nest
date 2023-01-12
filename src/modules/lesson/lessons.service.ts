@@ -57,4 +57,23 @@ export class LessonService {
     const result = await this.learningInfoModel.find({ lessonId }).exec();
     return result.map(el => MongoHelper.map(el.toObject()));
   }
+
+  public async completeLearn(lessonId: string, accountId: string): Promise<void> {
+    const challengeResult = await this.challengeResultModel.findOne({ lessonId, accountId }).exec();
+
+    if (challengeResult.status === StatusChallengeResult.STARTED) {
+      const challengeResultToUpdate = {
+        status: StatusChallengeResult.LEARNED,
+        score: challengeResult.score + 10
+      }
+
+      const set = { updatedAt: new Date() }
+
+      for (const field in challengeResultToUpdate) {
+        set[field] = challengeResultToUpdate[field]
+      }
+
+      await this.challengeResultModel.findOneAndUpdate({ accountId, lessonId }, { $set: set }, { returnOriginal: false })
+    }
+  }
 }
