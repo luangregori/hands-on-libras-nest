@@ -1,14 +1,16 @@
-import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
+import { forwardRef, MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
 import { UserService } from './users.service';
 import { UserController } from './users.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { UserSchema, User } from './schemas/user.schema';
 import { ChallengeResultsModule } from '../challenge-result/challenge-results.module';
 import { AuthMiddleware } from 'src/common/middlewares';
+import { RankingModule } from '../ranking/ranking.module';
 
 @Module({
   imports: [
     ChallengeResultsModule,
+    forwardRef(() => RankingModule),
     MongooseModule.forFeature([
       { name: User.name, schema: UserSchema },
     ]),

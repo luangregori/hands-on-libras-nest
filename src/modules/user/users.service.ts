@@ -8,6 +8,7 @@ import { User } from './schemas/user.schema';
 import { ChallengeResult } from '../challenge-result/schemas/challenge-result.schema';
 import { MongoHelper } from 'src/common/db';
 import { AuthResult } from './interfaces/auth.interface';
+import { LoadUserInfo } from './interfaces/user.interface';
 
 @Injectable()
 export class UserService {
@@ -56,5 +57,17 @@ export class UserService {
     let results = await this.challengeResultModel.find({ accountId }).exec();
     const sum = results.reduce((acc, result) => acc + result.score, 0)
     return sum
+  }
+
+  public async loadUserInfo(accountId: string): Promise<LoadUserInfo> {
+    const result = await this.userModel.findById(accountId)
+    const userInfo = MongoHelper.map(result.toObject())
+    const { password, ...userWithOutPass } = userInfo
+
+    // TODO: check achievements
+    // const achievements = await this.findAchievementsRepository.find(accountId)
+    // return Object.assign({}, userWithOutPass, { achievements })
+
+    return Object.assign({}, userWithOutPass)
   }
 }

@@ -9,15 +9,15 @@ import {
 } from '@nestjs/common';
 import { UserService } from './users.service';
 import { ApiTags } from '@nestjs/swagger';
-import { LoginDto } from './dto';
-import { RegisterDto } from './dto/register-dto';
-import { ScoreDto } from './dto/score-dto';
+import { LoginDto, RegisterDto, ScoreDto, UserInfoDto, } from './dto';
+import { RankingService } from '../ranking/ranking.service';
 
 @ApiTags('user')
 @Controller('users')
 export class UserController {
   constructor(
-    private userService: UserService
+    private userService: UserService,
+    private rankingService: RankingService
   ) { }
 
   @Post('/register')
@@ -61,5 +61,18 @@ export class UserController {
   ) {
     const score = await this.userService.loadScore(scoreDto.accountId)
     return res.status(HttpStatus.OK).json(score);
+  }
+
+  @Post('/info')
+  public async infos(
+    @Res() res,
+    @Body() userInfoDto: UserInfoDto,
+  ) {
+    const { accountId } = userInfoDto
+    const userInfo = await this.userService.loadUserInfo(accountId)
+    const userScore = await this.userService.loadScore(accountId);
+    const userRanking = await this.rankingService.load(7);
+    const userPosition = userRanking.find(user => user.id.toString() === accountId)?.position;
+    return res.status(HttpStatus.OK).json({ userInfo, userScore, userPosition });
   }
 }

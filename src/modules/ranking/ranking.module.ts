@@ -1,4 +1,4 @@
-import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import { forwardRef, MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { RankingService } from './ranking.service';
 import { RankingController } from './ranking.controller';
 import { AuthMiddleware } from '../../common/middlewares';
@@ -7,11 +7,14 @@ import { UsersModule } from '../user/users.module';
 
 @Module({
   imports: [
-    UsersModule,
+    forwardRef(() => UsersModule),
     ChallengeResultsModule
   ],
   providers: [RankingService],
   controllers: [RankingController],
+  exports: [
+    RankingService
+  ]
 })
 export class RankingModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
