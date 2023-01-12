@@ -6,11 +6,14 @@ import { LessonSchema, Lesson } from './schemas/lesson.schema';
 import { AuthMiddleware } from 'src/common/middlewares';
 import { ChallengeResultsModule } from 'src/modules/challenge-result/challenge-results.module';
 import { LearningInfosModule } from 'src/modules/learning-info/learning-infos.module';
+import { ChallengeQuestionsModule } from '../challenge-question/challenge-questions.module';
+
 
 @Module({
   imports: [
     ChallengeResultsModule,
     LearningInfosModule,
+    ChallengeQuestionsModule,
     MongooseModule.forFeature([
       { name: Lesson.name, schema: LessonSchema },
     ]),

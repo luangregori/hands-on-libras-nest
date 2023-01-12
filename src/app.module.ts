@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { MongooseModule } from '@nestjs/mongoose';
-import { UsersModule, CategoriesModule, LessonsModule, ChallengeResultsModule } from './modules';
+import { UsersModule, CategoriesModule, LessonsModule, ChallengeResultsModule, ChallengeQuestionsModule } from './modules';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
@@ -21,7 +21,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
     UsersModule,
     CategoriesModule,
     LessonsModule,
-    ChallengeResultsModule
+    ChallengeResultsModule,
+    ChallengeQuestionsModule
   ],
   controllers: [AppController],
   providers: [AppService],
